@@ -1,0 +1,4 @@
+$(".answer-box").html("<%=j render 'home/comments_posted', post: @post , limit: @limit %>");
+
+$('.sent').parent().parent().removeClass("show");
+$('.sent').parent().find("textarea").val("")

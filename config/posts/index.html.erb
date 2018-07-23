@@ -1,0 +1,51 @@
+<div class="posts-main">
+  <div class="d-flex flex-wrap post-title">
+    <h3>Posts</h3>
+    <%= link_to '<i class="fa fa-plus"></i> Create a new Post'.html_safe, new_student_post_path, class: "btn btn-success ml-auto" %>
+  </div>
+
+  <% @posts.each_with_index do |post,i| %>
+    <div class="posts-box">
+    <div class="img">
+      <%= image_tag(post.documents.first.file.url, :size => "260x180") if post.documents.present? %>
+    </div>
+    <%= link_to student_post_path(post) do %>
+      <h5><%= post.title %></h5>
+    <% end %>
+    <div class="date">
+      <i class="far fa-calendar-alt"></i><%= post.created_at.strftime("%B %d, %Y") %>
+    </div>
+    <% @rate = current_user.reviews.find_by(rateable_type: "Post",rateable_id: post.id).try(:stars)%>
+    <div class="rating" data-post = "<%= post.id %>">
+      <%= render 'home/rating_stars', post: post %>
+    </div>
+    <p>
+      <%= post.description %>
+    </p>
+    <div class="answer-box">
+      <%= render 'home/comments_posted', post: post, limit: "2" %>
+    </div>
+    <div class="add-comment">
+      <a data-toggle="collapse" href="#collapseExample<%= i %>" role="button" aria-expanded="false" aria-controls="collapseExample">
+         <i class="fas fa-comment"></i> Add Comment
+      </a>
+      <div class="collapse" id="collapseExample<%= i %>">
+        <%= form_for post, method: "post", url: add_post_comments_student_post_path(post.id), remote: true do |f| %>
+          <%= f.fields_for :comments, Comment.new do |comment| %>
+            <%= comment.text_area :body, class: "form-control mt-2" %>
+            <%= comment.hidden_field :user_id, value: current_user.id %>
+            <%= comment.hidden_field :limit, value: "2" %>
+          <% end %>
+          <%= f.submit "Send",  class: "btn btn-success mt-2 float-right sent" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+<script>
+  $(document).ready(function(){
+    EDU.Topic.rating($('.rate'));
+  });
+</script>

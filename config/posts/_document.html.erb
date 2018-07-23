@@ -1,0 +1,6 @@
+<%= form.fields_for :documents, Document.new do |document| %>
+  <div class="field">
+      <%= document.label :file %>
+      <%= document.file_field :file %>
+  </div>
+<% end %>

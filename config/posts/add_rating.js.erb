@@ -1,0 +1,4 @@
+$(".rating[data-post='"+<%= @post.id %>+"']").html("<%= j render 'home/rating_stars', post: @post %>");
+$(document).ready(function(){
+  EDU.Topic.rating($('.rate'));
+});
